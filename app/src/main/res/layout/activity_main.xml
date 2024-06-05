@@ -132,4 +132,15 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="vertical"/>
 
+    <TextView
+        android:id="@+id/empty_tv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:gravity="center"
+        android:text="No Orders Found!"
+        android:fontFamily="@font/poppins_semibold"
+        android:textColor="@color/blue"
+        android:textSize="18sp"/>
+
 </LinearLayout>

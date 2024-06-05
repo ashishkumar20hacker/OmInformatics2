@@ -75,19 +75,26 @@ public class MainActivity extends AppCompatActivity {
     private void handleAdapter(LiveData<List<DbOrderModel>> listLiveData) {
         runOnUiThread(() -> {
             listLiveData.observe(this, dbOrderModels -> {
-                OrderAdapter adapter = new OrderAdapter(this, orderModel -> {
-                    showLoadingDialog();
-                    viewOrderModel.getDistanceIsLessThan50M(this, orderModel.getLatitude(), orderModel.getLongitude(), isWithin50Meters -> {
-                        dismissLoadingDialog();
-                        if (isWithin50Meters) {
-                            startActivity(new Intent(MainActivity.this, DeliveryActivity.class).putExtra("orderId", orderModel.getOrder_id()));
-                        } else {
-                            Toast.makeText(MainActivity.this, "Delivery location is too far!", Toast.LENGTH_SHORT).show();
-                        }
+                if (dbOrderModels.size()>0) {
+                    OrderAdapter adapter = new OrderAdapter(this, orderModel -> {
+                        showLoadingDialog();
+                        viewOrderModel.getDistanceIsLessThan50M(this, orderModel.getLatitude(), orderModel.getLongitude(), isWithin50Meters -> {
+                            dismissLoadingDialog();
+                            if (isWithin50Meters) {
+                                startActivity(new Intent(MainActivity.this, DeliveryActivity.class).putExtra("orderId", orderModel.getOrder_id()));
+                            } else {
+                                Toast.makeText(MainActivity.this, "Delivery location is too far!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     });
-                });
-                binding.orderRv.setAdapter(adapter);
-                adapter.submitList(dbOrderModels);
+                    binding.orderRv.setAdapter(adapter);
+                    adapter.submitList(dbOrderModels);
+                    binding.orderRv.setVisibility(View.VISIBLE);
+                    binding.emptyTv.setVisibility(View.GONE);
+                } else {
+                    binding.orderRv.setVisibility(View.GONE);
+                    binding.emptyTv.setVisibility(View.VISIBLE);
+                }
             });
         });
     }
